@@ -11,13 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements ExpenseRecyclerViewAdapter.OnRecyclerViewItemClickListener{
+public class MainActivity extends AppCompatActivity implements ExpenseRecyclerViewAdapter.OnRecyclerViewItemClickListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     private RealmHelper realmHelper;
     private ExpenseRecyclerViewAdapter adapter;
@@ -44,18 +45,10 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
     @Override
     protected void onStart() {
         super.onStart();
-//        query();
+        query();
     }
 
     private void findViews() {
-        RealmResults<Expense> query_all = realmHelper.getmRealm().where(Expense.class).findAll();
-        query_all.addChangeListener(new RealmChangeListener<RealmResults<Expense>>() {
-            @Override
-            public void onChange(RealmResults<Expense> element) {
-                adapter.notifyDataSetChanged();
-
-            }
-        });
         adapter = new ExpenseRecyclerViewAdapter(realmHelper.getmRealm().where(Expense.class).findAll());
         adapter.setOnRecyclerViewItemClickListener(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
@@ -64,9 +57,15 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
         recyclerView.setHasFixedSize(true);
     }
 
-//    private void query() {
-//        adapter.notifyDataSetChanged();
-//    }
+    private void query() {
+//        query_all = realmHelper.getmRealm().where(Expense.class).findAll();
+        realmHelper.getmRealm().where(Expense.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Expense>>() {
+            @Override
+            public void onChange(RealmResults<Expense> element) {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
 
     private void init() {
         Realm.init(this);
@@ -96,18 +95,23 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
     }
 
     @Override
-    public void onItemClick(View view, Expense expense) {
-        Log.d("click", expense.getId()+"");
-        realmHelper.delExpense(expense.getId());
-
-//        Intent intent = new Intent();
-//        Bundle bundle = new Bundle();
-//        intent.setClass(this, AddExpense.class);
-//        bundle.putInt(Expense.MODE,Expense.MODE_EDIT);
-//        bundle.putInt(Expense.COL_ID,expense.getId());
-//        intent.putExtras(bundle);
-//        startActivity(intent);
+    public void clickEdit(Expense expense) {
+        Log.d("click", expense.getId() + "");
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        intent.setClass(this, AddExpense.class);
+        bundle.putInt(Expense.MODE, Expense.MODE_EDIT);
+        bundle.putInt(Expense.COL_ID, expense.getId());
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
+
+    @Override
+    public void clickDelete(Expense expense) {
+        Log.d("click", expense.getId() + "");
+        realmHelper.delExpense(expense.getId());
+    }
+
 
     @Override
     protected void onDestroy() {

@@ -95,8 +95,12 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
                 date.append((datePicker.getMonth() + 1) + "-");
                 date.append(datePicker.getDayOfMonth());
 
-                add_expense.setId(RealmHelper.getInstance(this).getNextKey());
-                Log.d("getNext key", RealmHelper.getInstance(this).getNextKey() +"");
+                if (isEditMode) {
+                    add_expense.setId(expense.getId());
+                } else {
+                    add_expense.setId(RealmHelper.getInstance(this).getNextKey());
+                }
+                Log.d("now id", add_expense.getId() +"");
                 add_expense.setDate(date.toString());
                 add_expense.setInfo(et_info.getText().toString());
                 add_expense.setAmount(Integer.parseInt(et_amount.getText().toString()));
