@@ -17,6 +17,7 @@ import android.widget.TextView;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class MainActivity extends AppCompatActivity implements ExpenseRecyclerViewAdapter.OnRecyclerViewItemClickListener {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -30,7 +31,9 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //初始化 Realm database
         init();
+        //初始化UI元件
         findViews();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
     }
 
     private void findViews() {
-        adapter = new ExpenseRecyclerViewAdapter(realmHelper.getmRealm().where(Expense.class).findAll());
+        adapter = new ExpenseRecyclerViewAdapter(realmHelper.getmRealm().where(Expense.class).findAll().sort(Expense.COL_ID, Sort.DESCENDING));
         adapter.setOnRecyclerViewItemClickListener(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
