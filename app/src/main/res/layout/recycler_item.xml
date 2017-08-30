@@ -34,16 +34,19 @@
     <ImageView
         android:id="@+id/iv_recycler_edit"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:visibility="gone"
         android:src="@drawable/ic_edit_black_24dp"
+        android:background="#cccccc"
         android:layout_weight="0.75" />
 
     <ImageView
         android:id="@+id/iv_recycler_del"
         android:layout_width="0dp"
         android:src="@drawable/ic_delete_black_24dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginLeft="6dp"
+        android:background="#cccccc"
         android:visibility="gone"
         android:layout_weight="0.75" />
 </LinearLayout>

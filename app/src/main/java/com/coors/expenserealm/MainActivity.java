@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.coors.expenserealm.app.App;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -45,12 +47,6 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        query();
-    }
-
     private void findViews() {
         adapter = new ExpenseRecyclerViewAdapter(realmHelper.getmRealm().where(Expense.class).findAll().sort(Expense.COL_ID, Sort.DESCENDING));
         adapter.setOnRecyclerViewItemClickListener(this);
@@ -58,10 +54,7 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-    }
 
-    private void query() {
-//        query_all = realmHelper.getmRealm().where(Expense.class).findAll();
         realmHelper.getmRealm().where(Expense.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Expense>>() {
             @Override
             public void onChange(RealmResults<Expense> element) {
@@ -71,8 +64,7 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
     }
 
     private void init() {
-        Realm.init(this);
-        realmHelper = RealmHelper.getInstance(this);
+        realmHelper = ((App)getApplication()).getRealmHelper();
     }
 
     @Override
@@ -120,5 +112,6 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
     protected void onDestroy() {
         super.onDestroy();
         recyclerView.setAdapter(null);
+        realmHelper.getmRealm().close();
     }
 }
