@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">ExpenseRealm</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">匯入json</string>
 </resources>

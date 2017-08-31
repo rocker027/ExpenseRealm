@@ -22,6 +22,7 @@ public class Expense extends RealmObject {
     public static final int MODE_EDIT = 100;
     public static final int MODE_ADD = 100;
     //    private static AtomicInteger auto_key = new AtomicInteger(0);
+
     @PrimaryKey
     private int id;
     private String date;

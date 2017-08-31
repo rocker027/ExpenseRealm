@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.coors.expenserealm.app.App;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
 
     private void init() {
         realmHelper = ((App)getApplication()).getRealmHelper();
+        realmHelper.getmRealm();
     }
 
     @Override
@@ -83,6 +87,18 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            try {
+                final InputStream is = getAssets().open("exp.json");
+                realmHelper.getmRealm().executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realmHelper.getmRealm().createOrUpdateAllFromJson(Expense.class, is);
+                    }
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return true;
         }
 
