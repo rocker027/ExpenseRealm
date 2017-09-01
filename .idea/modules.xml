@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/ExpenseRealm.iml" filepath="$PROJECT_DIR$/ExpenseRealm.iml" />
       <module fileurl="file://$PROJECT_DIR$/ExpenseRealm.iml" filepath="$PROJECT_DIR$/ExpenseRealm.iml" />
       <module fileurl="file://$PROJECT_DIR$/ExpenseRealmV.iml" filepath="$PROJECT_DIR$/ExpenseRealmV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ExpenseRealmV2.iml" filepath="$PROJECT_DIR$/ExpenseRealmV2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

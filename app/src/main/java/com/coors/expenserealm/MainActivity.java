@@ -8,11 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.View;
 
 import com.coors.expenserealm.app.App;
 
@@ -29,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
     private RealmHelper realmHelper;
     private ExpenseRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
+    private RealmResults<Expense> expenses;
+    private Realm realm;
+    private RealmChangeListener<RealmResults<Expense>> realmChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
         //初始化 Realm database
         init();
         //初始化UI元件
-        findViews();
+        setUpRecyclerViiew();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,25 +51,28 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
         });
     }
 
-    private void findViews() {
-        adapter = new ExpenseRecyclerViewAdapter(realmHelper.getmRealm().where(Expense.class).findAll().sort(Expense.COL_ID, Sort.DESCENDING));
+    private void setUpRecyclerViiew() {
+        realm = Realm.getDefaultInstance();
+        expenses = realm.where(Expense.class).findAll().sort(Expense.COL_ID, Sort.DESCENDING);
+        Log.d("query size : ", expenses.size() + "");
+        adapter = new ExpenseRecyclerViewAdapter(expenses);
         adapter.setOnRecyclerViewItemClickListener(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-
-        realmHelper.getmRealm().where(Expense.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Expense>>() {
+        // 幫Realm資料庫設置改變監聽器
+        realmChangeListener = new RealmChangeListener<RealmResults<Expense>>() {
             @Override
             public void onChange(RealmResults<Expense> element) {
                 adapter.notifyDataSetChanged();
             }
-        });
+        };
+        expenses.addChangeListener(realmChangeListener);
     }
 
     private void init() {
         realmHelper = ((App)getApplication()).getRealmHelper();
-        realmHelper.getmRealm();
     }
 
     @Override
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             try {
+                // 直接讀取json格式，指定Model格式，存入Realm database中
                 final InputStream is = getAssets().open("exp.json");
                 realmHelper.getmRealm().executeTransaction(new Realm.Transaction() {
                     @Override
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements ExpenseRecyclerVi
     protected void onDestroy() {
         super.onDestroy();
         recyclerView.setAdapter(null);
-        realmHelper.getmRealm().close();
+        realm.close();
+        expenses.removeChangeListener(realmChangeListener);
     }
 }

@@ -2,8 +2,6 @@ package com.coors.expenserealm;
 
 import android.content.Context;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -20,6 +18,7 @@ public class RealmHelper {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
                 .name(Expense.TABLE_NAME)
                 .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
         mRealm = Realm.getInstance(realmConfiguration);
     }
 

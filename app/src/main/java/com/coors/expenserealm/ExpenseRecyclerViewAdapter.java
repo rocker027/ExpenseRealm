@@ -28,15 +28,13 @@ import android.widget.TextView;
 
 import io.realm.OrderedRealmCollection;
 
-class ExpenseRecyclerViewAdapter extends RealmRecyclerViewAdapter<Expense, ExpenseRecyclerViewAdapter.ViewHolder>{
-
-    public static interface OnRecyclerViewItemClickListener {
-//        void onItemClick(View view, Expense expense);
-        void clickEdit(Expense expense);
-        void clickDelete(Expense expense);
-    }
+class ExpenseRecyclerViewAdapter extends RealmRecyclerViewAdapter<Expense, ExpenseRecyclerViewAdapter.ViewHolder> {
 
     private OnRecyclerViewItemClickListener onRecyclerViewItemClickListener;
+
+    public ExpenseRecyclerViewAdapter(@Nullable OrderedRealmCollection<Expense> data) {
+        super(data, false);
+    }
 
     public OnRecyclerViewItemClickListener getOnRecyclerViewItemClickListener() {
         return onRecyclerViewItemClickListener;
@@ -44,10 +42,6 @@ class ExpenseRecyclerViewAdapter extends RealmRecyclerViewAdapter<Expense, Expen
 
     public void setOnRecyclerViewItemClickListener(OnRecyclerViewItemClickListener onRecyclerViewItemClickListener) {
         this.onRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
-    }
-
-    public ExpenseRecyclerViewAdapter(@Nullable OrderedRealmCollection<Expense> data) {
-        super(data, false);
     }
 
     @Override
@@ -83,7 +77,12 @@ class ExpenseRecyclerViewAdapter extends RealmRecyclerViewAdapter<Expense, Expen
 //        holder.itemView.setTag(expense);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static interface OnRecyclerViewItemClickListener {
+        void clickEdit(Expense expense);
+        void clickDelete(Expense expense);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tv_item_date;
         private TextView tv_item_info;
         private TextView tv_item_amount;

@@ -1,11 +1,5 @@
 package com.coors.expenserealm;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
